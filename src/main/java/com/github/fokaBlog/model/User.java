@@ -1,7 +1,6 @@
 package com.github.fokaBlog.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +16,20 @@ import java.util.List;
 @Builder
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     private String password;
 
-    // private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 }
