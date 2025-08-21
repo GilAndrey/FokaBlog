@@ -22,6 +22,7 @@ public class PostController {
     }
 
     // Criar Posts
+    @PostMapping("/user/{userId}")
     public ResponseEntity<Post> createPost(@PathVariable Long userId, @RequestBody Post post) {
         return userService.getUserById(userId)
                 .map(user -> {

@@ -1,5 +1,7 @@
 package io.github.fokaBlog.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +26,6 @@ public class Post {
     @Column(nullable = false)
     private String title;
 
-    @Lob
     @Column(nullable = false)
     private String content;
 
@@ -32,9 +33,11 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
+    @JsonBackReference
     private User author;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Comment> comments;
 
     public void prePersist() {
