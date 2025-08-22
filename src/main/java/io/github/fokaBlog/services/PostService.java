@@ -5,6 +5,7 @@ import io.github.fokaBlog.model.User;
 import io.github.fokaBlog.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ public class PostService {
     }
 
     public Post createPost(Post post) {
+        post.setCreatedAt(LocalDateTime.now());
         return postRepository.save(post);
     }
 

@@ -1,5 +1,7 @@
 package io.github.fokaBlog.controller;
 
+import io.github.fokaBlog.dto.DtoMapper;
+import io.github.fokaBlog.dto.UserDTO;
 import io.github.fokaBlog.model.User;
 import io.github.fokaBlog.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +27,17 @@ public class UserController {
     }
 
     // Listar todos os usuarios
+//    @GetMapping
+//    public ResponseEntity<List<User>> getAllUsers() {
+//        return ResponseEntity.ok(userService.getAllUsers());
+//    }
+
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public List<UserDTO> getAllUsers() {
+        return userService.getAllUsers()
+                .stream()
+                .map(DtoMapper::toUserDTO)
+                .toList();
     }
 
     // Buscar por Id

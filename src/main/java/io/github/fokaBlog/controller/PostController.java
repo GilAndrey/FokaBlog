@@ -1,5 +1,7 @@
 package io.github.fokaBlog.controller;
 
+import io.github.fokaBlog.dto.DtoMapper;
+import io.github.fokaBlog.dto.PostDTO;
 import io.github.fokaBlog.model.Post;
 import io.github.fokaBlog.services.PostService;
 import io.github.fokaBlog.services.UserService;
@@ -32,17 +34,36 @@ public class PostController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Listar todos os Posts
+//    // Listar todos os Posts
+//    @GetMapping
+//    public ResponseEntity<List<Post>> getAllPosts() {
+//        return ResponseEntity.ok(postService.getAllPost());
+//    }
+
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPost());
+    public List<PostDTO> getAllPosts() {
+        return postService.getAllPost()
+                .stream()
+                .map(DtoMapper::toPostDTO)
+                .toList();
     }
 
-    // Buscar posts por ID
+    /*
+        Buscar posts por ID
+        Está gerando Looping no JSON
+    */
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+//        return postService.getPostById(id)
+//                .map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.notFound().build());
+//    }
+
+    // EndPoint com DTO para evitar Loopings em JSON
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+    public ResponseEntity<PostDTO> getPostById(@PathVariable Long id) {
         return postService.getPostById(id)
-                .map(ResponseEntity::ok)
+                .map(post -> ResponseEntity.ok(DtoMapper.toPostDTO(post)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
