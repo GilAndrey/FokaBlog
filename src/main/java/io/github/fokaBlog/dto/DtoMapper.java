@@ -47,6 +47,7 @@ public class DtoMapper {
         dto.setId(comment.getId());
         dto.setContent(comment.getContent());
         dto.setAuthUsername(comment.getAuthor().getUsername());
+        dto.setCreatedAt(comment.getCreatedAt());
         return dto;
     }
 }
