@@ -29,7 +29,10 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
@@ -40,7 +43,16 @@ public class Post {
     @JsonManagedReference
     private List<Comment> comments;
 
-    public void prePersist() {
-        createdAt = LocalDateTime.now();
+    // Modificado AKIII
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+
 }

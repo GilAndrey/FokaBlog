@@ -22,14 +22,16 @@ public class CommentService {
 
     private final UserRepository userRepository;
 
+    // Adicionando para Atualização de comentario
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
+    }
+
     public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
-
-    // Criação de comentario, o createdAt está dando Null
-    // ## Resolvido no PostService.
 
     public Comment createComment(Long postId, Comment comment) {
         Post post = postRepository.findById(postId)
@@ -43,9 +45,17 @@ public class CommentService {
             comment.setAuthor(author);
         }
 
-        // Está nullo no Postman, porem no Banco de dados funciona
         comment.setCreatedAt(LocalDateTime.now());
 
+        return commentRepository.save(comment);
+    }
+
+    // Fluxo de Update, para o @PreUpdate rodar automaticamente
+    public Comment updateComment(Long id, String newContent) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comment not found!"));
+
+        comment.setContent(newContent);
         return commentRepository.save(comment);
     }
 

@@ -31,6 +31,7 @@ public class DtoMapper {
         dto.setContent(post.getContent());
         dto.setAuthUsername(post.getAuthor().getUsername());
         dto.setCreatedAt(post.getCreatedAt());
+        dto.setUpdatedAt(post.getUpdatedAt());
 
         if (post.getComments() != null) {
             dto.setComments(
@@ -48,6 +49,7 @@ public class DtoMapper {
         dto.setContent(comment.getContent());
         dto.setAuthUsername(comment.getAuthor().getUsername());
         dto.setCreatedAt(comment.getCreatedAt());
+        dto.setUpdatedAt(comment.getUpdateAt());
         return dto;
     }
 }

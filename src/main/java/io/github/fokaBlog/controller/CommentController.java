@@ -5,6 +5,7 @@ import io.github.fokaBlog.dto.DtoMapper;
 import io.github.fokaBlog.model.Comment;
 import io.github.fokaBlog.services.CommentService;
 import io.github.fokaBlog.services.PostService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +54,17 @@ public class CommentController {
         return postService.getPostById(postId)
                 .map(post -> ResponseEntity.ok(commentService.getCommentsByPost(post)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Atualizar comentario
+    @PutMapping("/{id}")
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable Long id, @RequestBody CommentDTO updateCommentDto) {
+        try {
+            Comment updated = commentService.updateComment(id, updateCommentDto.getContent());
+            return ResponseEntity.ok(DtoMapper.toCommentDTO(updated));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Deletar comentario

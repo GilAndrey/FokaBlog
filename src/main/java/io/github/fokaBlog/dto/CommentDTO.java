@@ -13,5 +13,6 @@ public class CommentDTO {
     private String content;
     private String authUsername;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

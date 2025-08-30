@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,7 +25,10 @@ public class Comment {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    private LocalDateTime updateAt;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
@@ -36,8 +40,13 @@ public class Comment {
     private Post post;
 
     @PrePersist
-    public void prePersist() {
-        createdAt = LocalDateTime.now();
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updateAt = LocalDateTime.now();
     }
 
 }

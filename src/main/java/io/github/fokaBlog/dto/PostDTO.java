@@ -15,6 +15,7 @@ public class PostDTO {
     private String content;
     private String authUsername;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private List<CommentDTO> comments;
 }
