@@ -48,17 +48,6 @@ public class PostController {
                 .toList();
     }
 
-    /*
-        Buscar posts por ID
-        Está gerando Looping no JSON
-    */
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
-//        return postService.getPostById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-
     // EndPoint com DTO para evitar Loopings em JSON
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long id) {
@@ -71,6 +60,20 @@ public class PostController {
     @GetMapping("/search")
     public ResponseEntity<List<Post>> searchPosts(@RequestParam String title){
         return ResponseEntity.ok(postService.searchPostByTitle(title));
+    }
+
+    // Atualizar Post
+    @PutMapping("/{id}")
+    public ResponseEntity<PostDTO> updatePost(
+            @PathVariable Long id,
+            @RequestBody PostDTO updatedPostDto
+    ) {
+        try {
+            Post updated = postService.updatePost(id, updatedPostDto.getTitle(), updatedPostDto.getContent());
+            return ResponseEntity.ok(DtoMapper.toPostDTO(updated));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Deletar Posts

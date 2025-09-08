@@ -35,6 +35,15 @@ public class PostService {
         return postRepository.findByAuthor(author);
     }
 
+    public Post updatePost(Long id, String newTitle, String newContent) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found!!"));
+
+        post.setTitle(newTitle);
+        post.setContent(newContent);
+        return postRepository.save(post);
+    }
+
     public List<Post> searchPostByTitle(String title) {
         return postRepository.findByTitleContainingIgnoreCase(title);
     }

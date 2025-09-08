@@ -53,6 +53,4 @@ public class Post {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
-
 }
