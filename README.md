@@ -24,12 +24,6 @@ O foco principal foi a construção de um sistema de segurança robusto do zero,
 
 ---
 
-### 💻 A Jornada de Aprendizado
-
-O maior desafio (e também o maior aprendizado!) foi, sem dúvida, a implementação da camada de segurança com Spring Security. Configurar o `SecurityFilterChain`, entender o fluxo de autenticação, gerenciar as permissões e fazer tudo funcionar de forma coesa foi uma experiência incrível que solidificou conceitos essenciais de desenvolvimento seguro de APIs.
-
----
-
 ###  toolbox: Caixa de Ferramentas (Tecnologias)
 
 * **Java** `21`
@@ -76,3 +70,4 @@ O maior desafio (e também o maior aprendizado!) foi, sem dúvida, a implementa�
 
 ---
 *Desenvolvido por Gil Andrey.*
+
