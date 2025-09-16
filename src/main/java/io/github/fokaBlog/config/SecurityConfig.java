@@ -25,28 +25,36 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
+        http
+                .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) ->
-                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Not authorized"))
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Not Authorized"))
                         .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied")))
+                                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied"))
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginProcessingUrl("/api/auth/login")
+                        .successHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
+                        .failureHandler((request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Falha na autenticação"))
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK))
+                );
 
-                .formLogin(form -> form.loginProcessingUrl("/api/auth/login")
-                        .successHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                        }))
-                .logout(logout -> logout.logoutUrl("/api/auth/logout"))
-                .build();
+        return http.build();
     }
 
     @Bean
