@@ -1,12 +1,17 @@
 package io.github.fokaBlog.controller;
 
+import io.github.fokaBlog.dto.CommentDTO;
+import io.github.fokaBlog.dto.CreateCommentDTO;
 import io.github.fokaBlog.dto.DtoMapper;
 import io.github.fokaBlog.dto.PostDTO;
+import io.github.fokaBlog.model.Comment;
 import io.github.fokaBlog.model.Post;
 import io.github.fokaBlog.model.User;
+import io.github.fokaBlog.services.CommentService;
 import io.github.fokaBlog.services.PostService;
 import io.github.fokaBlog.services.UserService;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +25,12 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final CommentService commentService;
 
-    public PostController(PostService postService, UserService userService) {
+    public PostController(PostService postService, UserService userService, CommentService commentService) {
         this.postService = postService;
         this.userService = userService;
+        this.commentService = commentService;
     }
 
     // Criar Posts
@@ -92,5 +99,18 @@ public class PostController {
                 .collect(Collectors.toList());
     }
 
+
+    /*
+    *  EndPoint de criar comentario, para ter uma melhor herança
+    */
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<CommentDTO> createComment(
+            @PathVariable Long postId,
+            @RequestBody CreateCommentDTO commentDTO,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        Comment createdComment = commentService.createComment(postId, commentDTO, currentUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(DtoMapper.toCommentDTO(createdComment));
+    }
 
 }

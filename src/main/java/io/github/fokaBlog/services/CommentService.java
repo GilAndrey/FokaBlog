@@ -1,5 +1,6 @@
 package io.github.fokaBlog.services;
 
+import io.github.fokaBlog.dto.CreateCommentDTO;
 import io.github.fokaBlog.model.Comment;
 import io.github.fokaBlog.model.Post;
 import io.github.fokaBlog.model.User;
@@ -33,21 +34,17 @@ public class CommentService {
         this.userRepository = userRepository;
     }
 
-    public Comment createComment(Long postId, Comment comment) {
+    public Comment createComment(Long postId, CreateCommentDTO commentDTO, User author) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found!"));
+                .orElseThrow(() -> new RuntimeException("Post not found with id " + postId));
 
-        comment.setPost(post);
+        Comment newComment = new Comment();
+        newComment.setContent(commentDTO.getContent());
+        newComment.setAuthor(author);
+        newComment.setPost(post);
+        newComment.setCreatedAt(LocalDateTime.now());
 
-        if (comment.getAuthor() != null && comment.getAuthor().getId() != null) {
-            User author = userRepository.findById(comment.getAuthor().getId())
-                    .orElseThrow(() -> new RuntimeException("Author not found!!"));
-            comment.setAuthor(author);
-        }
-
-        comment.setCreatedAt(LocalDateTime.now());
-
-        return commentRepository.save(comment);
+        return commentRepository.save(newComment);
     }
 
     // Fluxo de Update, para o @PreUpdate rodar automaticamente

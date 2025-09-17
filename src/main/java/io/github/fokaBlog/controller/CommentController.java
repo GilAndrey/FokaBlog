@@ -1,12 +1,16 @@
 package io.github.fokaBlog.controller;
 
 import io.github.fokaBlog.dto.CommentDTO;
+import io.github.fokaBlog.dto.CreateCommentDTO;
 import io.github.fokaBlog.dto.DtoMapper;
 import io.github.fokaBlog.model.Comment;
+import io.github.fokaBlog.model.User;
 import io.github.fokaBlog.services.CommentService;
 import io.github.fokaBlog.services.PostService;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,28 +27,12 @@ public class CommentController {
         this.postService = postService;
     }
 
-    /*
-    * Erro na criação de comentarios!
-    * Estao sendo direcionados para o primeiro User
-    * Estão com os dados do author em Null
-    * */
-
 
 //    @PostMapping("/post/{postId}")
-//    public ResponseEntity<Comment> createComment(@PathVariable Long postId, @RequestBody Comment comment) {
-//        return postService.getPostById(postId)
-//                .map(post -> {
-//                    comment.setPost(post);
-//                    return ResponseEntity.ok(commentService.createComment(comment));
-//                })
-//                .orElse(ResponseEntity.notFound().build());
+//    public ResponseEntity<CommentDTO> addComment(@PathVariable Long postId, @RequestBody Comment comment) {
+//        Comment saved = commentService.createComment(postId, comment);
+//        return ResponseEntity.ok(DtoMapper.toCommentDTO(saved));
 //    }
-
-    @PostMapping("/post/{postId}")
-    public ResponseEntity<CommentDTO> addComment(@PathVariable Long postId, @RequestBody Comment comment) {
-        Comment saved = commentService.createComment(postId, comment);
-        return ResponseEntity.ok(DtoMapper.toCommentDTO(saved));
-    }
 
 
 
