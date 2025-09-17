@@ -1,5 +1,6 @@
 package io.github.fokaBlog.services;
 
+import io.github.fokaBlog.dto.PostDTO;
 import io.github.fokaBlog.model.Post;
 import io.github.fokaBlog.model.User;
 import io.github.fokaBlog.repository.PostRepository;
@@ -18,9 +19,13 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public Post createPost(Post post) {
-        post.setCreatedAt(LocalDateTime.now());
-        return postRepository.save(post);
+    public Post createPost(PostDTO postDto, User author) {
+        Post newPost = new Post();
+        newPost.setTitle(postDto.getTitle());
+        newPost.setContent(postDto.getContent());
+        newPost.setAuthor(author);
+        newPost.setCreatedAt(LocalDateTime.now());
+        return postRepository.save(newPost);
     }
 
     public List<Post> getAllPost() {
@@ -41,6 +46,7 @@ public class PostService {
 
         post.setTitle(newTitle);
         post.setContent(newContent);
+        post.setUpdatedAt(LocalDateTime.now());
         return postRepository.save(post);
     }
 

@@ -40,11 +40,11 @@ public class UserController {
                 .toList();
     }
 
-    // Buscar por Id
+    // Buscar por Id *Atualização para não retornar a senha*
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
-                .map(ResponseEntity::ok)
+                .map(user -> ResponseEntity.ok(DtoMapper.toUserDTO(user)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
