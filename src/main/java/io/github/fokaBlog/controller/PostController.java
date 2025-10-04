@@ -10,9 +10,9 @@ import io.github.fokaBlog.model.User;
 import io.github.fokaBlog.services.CommentService;
 import io.github.fokaBlog.services.PostService;
 import io.github.fokaBlog.services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,21 +72,38 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(
             @PathVariable Long id,
-            @RequestBody PostDTO updatedPostDto
+            @RequestBody PostDTO updatedPostDto,
+            @AuthenticationPrincipal User currentUser
     ) {
         try {
-            Post updated = postService.updatePost(id, updatedPostDto.getTitle(), updatedPostDto.getContent());
+            Post updated = postService.updatePost(id, updatedPostDto, currentUser);
             return ResponseEntity.ok(DtoMapper.toPostDTO(updated));
-        } catch (RuntimeException e) {
+
+        }
+        catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     // Deletar Posts
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        try {
+            postService.deletePost(id, currentUser);
+            return ResponseEntity.noContent().build();
+        }
+        catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Pegar o posts do autor autenticado
